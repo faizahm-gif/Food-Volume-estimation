@@ -17,19 +17,19 @@ notebook's end-to-end result on one image, with no notebook required.
 ```
 thali_volume_pipeline/
 ├── config/
-│   └── config.py          # all paths, thresholds, camera profiles in one place
+│   └── config.py         
 ├── src/
-│   ├── segmentation.py     # DetectionDeduplicator, FoodPlateSegmentation, plate detection
-│   ├── depth.py            # Depth Anything V2 model loading + inference
-│   ├── camera.py           # manual camera intrinsics lookup (no EXIF/auto-detect)
-│   ├── volume.py           # reference depth, per-item height/area/volume math
-│   └── pipeline.py         # ThaliVolumePipeline: wires the above into one call
+│   ├── segmentation.py     
+│   ├── depth.py           
+│   ├── camera.py          
+│   ├── volume.py         
+│   └── pipeline.py        
 ├── scripts/
-│   └── setup_env.sh        # installs deps, clones sam2 + Depth-Anything-V2
-├── models/checkpoints/      # put your dav2_nutrition5k_best.pth here
-├── data/                    # put your input food image(s) here
-├── outputs/                 # results are written here (depth map, masks, volumes.json)
-├── demo.py                  # <-- run this
+│   └── setup_env.sh   
+├── models/checkpoints/    
+├── data/                  
+├── outputs/                 
+├── demo.py
 └── requirements.txt
 ```
 
@@ -45,10 +45,10 @@ This installs Python dependencies and clones `facebookresearch/sam2` and
 `Depth-Anything-V2`'s `depth_anything_v2` package is imported directly, and
 `sam2` is installed as an editable package).
 
-## Required inputs (not included in this codebase)
+## Required inputs
 
 1. **A food image** — place it under `data/`, e.g. `data/plate.jpeg`.
-2. **A fine-tuned Depth Anything V2 checkpoint** (`dav2_nutrition5k_best.pth`)
+2. **Add model weights (you can download it from here) [Model weights](https://drive.google.com/file/d/1GBDcIkjbvt089516xQsQK_SYa0i4PMDL/view?usp=sharing)** 
    — place it under `models/checkpoints/`.
 3. **A camera profile** for whatever device took the photo — add its
    `fx_px`, `fy_px`, and the reference resolution it was calibrated at to
@@ -72,7 +72,7 @@ python demo.py \
 
 All flags are optional and fall back to the defaults in `config/config.py`.
 
-### What it prints
+### Output
 
 - Detected food items and confidences
 - Auto-detected plate/tray mask confidence
