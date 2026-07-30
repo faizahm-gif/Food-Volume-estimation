@@ -8,11 +8,6 @@ from a single RGB photo, using:
 - A **pinhole camera model** to convert pixel area -> real-world area, and
   depth difference -> food height, per item
 
-If you don't want to run the code on your images, then run the following script 
-```bash
-python demo.py
-```
-
 ## Layout
 
 ```
@@ -40,6 +35,11 @@ thali_volume_pipeline/
 cd thali_volume_pipeline
 bash scripts/setup_env.sh
 ```
+If you don't want to run the code on your images, then run the following script 
+```bash
+python demo.py
+```
+
 
 This installs Python dependencies and clones `facebookresearch/sam2` and
 `DepthAnything/Depth-Anything-V2` into the project root (needed because
