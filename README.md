@@ -8,9 +8,10 @@ from a single RGB photo, using:
 - A **pinhole camera model** to convert pixel area -> real-world area, and
   depth difference -> food height, per item
 
-This is a from-scratch restructure of the original Colab notebook into an
-importable, script-runnable codebase. Running `demo.py` reproduces the
-notebook's end-to-end result on one image, with no notebook required.
+If you don't want to run the code on your images, then run the following script 
+```bash
+python demo.py
+```
 
 ## Layout
 
