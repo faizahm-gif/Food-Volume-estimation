@@ -87,18 +87,4 @@ All flags are optional and fall back to the defaults in `config/config.py`.
 - `masks/plate_mask.png`, `masks/<item_key>.png` — binary PNG masks
 - `plate_mask.npy` — raw plate mask array
 - `food_item_volumes_cc.json` — per-item + total volume in cc
-
-No histograms or side-by-side comparison figures are generated — only the
-depth map and segmentation masks, per current preference.
-
-## Notes carried over from the notebook
-
-- **No convex-hull plate fallback.** The plate/tray mask must come from
-  Grounding DINO + SAM2; if no plate is detected, the pipeline raises with a
-  suggestion to lower `min_confidence` or use a clearer photo.
-- **No EXIF or auto camera-calibration.** Focal length is always looked up
-  from the manual `CAMERA_INTRINSICS_OVERRIDES` table in `config/config.py`.
-- **Single reference depth per thali.** The reference depth is the median
-  depth over the whole plate mask (no per-item local ring search, no global
-  plane fit). Height is `thali_reference_depth - food_depth`, `abs()`'d only
-  as a last-resort cleanup of edge noise, with a diagnostic printed per item.
+  
