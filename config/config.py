@@ -1,8 +1,3 @@
-"""
-Single place for every path/threshold/camera-profile default used by the
-pipeline. `demo.py` CLI flags override these; nothing else in `src/` hardcodes
-a path or magic number.
-"""
 import os
 
 # ---------------------------------------------------------------------------
@@ -22,7 +17,7 @@ DAV2_METRIC_DEPTH_DIR = os.path.join(DAV2_REPO_DIR, "metric_depth")
 
 # Default input image / checkpoint. Override with --image / --checkpoint on
 # the demo.py CLI, or just change these two lines.
-DEFAULT_IMAGE_PATH = os.path.join(DATA_DIR, "plate.jpeg")
+DEFAULT_IMAGE_PATH = os.path.join(DATA_DIR, "sample.jpg")
 DEFAULT_CHECKPOINT_PATH = os.path.join(CHECKPOINTS_DIR, "dav2_finetuned.pth")
 
 # ---------------------------------------------------------------------------
@@ -35,24 +30,13 @@ DAV2_MODEL_CONFIGS = {
 }
 DAV2_ENCODER = "vits"
 DAV2_DATASET = "hypersim"
-DAV2_CHECKPOINT_TRAINED_MAX_DEPTH = 0.31  # meters
+DAV2_CHECKPOINT_TRAINED_MAX_DEPTH = 0.4  # meters
 
-# ---------------------------------------------------------------------------
-# Segmentation thresholds
-# ---------------------------------------------------------------------------
+
 FOOD_CONFIDENCE_THRESHOLD = 0.25
-FOOD_CUSTOM_PROMPT = None  # None -> use FoodPlateSegmentation's built-in prompt list
+FOOD_CUSTOM_PROMPT = None  
 PLATE_MIN_CONFIDENCE = 0.15
 MAX_DETECTIONS = 10
-
-# ---------------------------------------------------------------------------
-# Manual camera intrinsics only. No EXIF, no auto field-of-view fallback: if
-# the camera used isn't a key below, get_camera_intrinsics() raises rather
-# than guessing.
-#
-# Add one entry per camera/phone (from a one-time calibration, e.g. a
-# checkerboard, or the phone's spec sheet), keyed by a name you choose.
-# ---------------------------------------------------------------------------
 CAMERA_INTRINSICS_OVERRIDES = {
     "iphone": {
         "fx_px": 930,
@@ -63,7 +47,4 @@ CAMERA_INTRINSICS_OVERRIDES = {
 }
 DEFAULT_CAMERA_PROFILE_NAME = "iphone"
 
-# ---------------------------------------------------------------------------
-# Unit conversion
-# ---------------------------------------------------------------------------
 M3_TO_CC = 1_000_000.0

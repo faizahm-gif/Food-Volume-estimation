@@ -67,7 +67,7 @@ profile.
 python demo.py \
   --image data/plate.jpeg \
   --checkpoint models/checkpoints/dav2_nutrition5k_best.pth \
-  --camera-profile "google pixel 8" \
+  --camera-profile "iphone" \
   --output-dir outputs
 ```
 
