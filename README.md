@@ -35,16 +35,27 @@ thali_volume_pipeline/
 cd thali_volume_pipeline
 bash scripts/setup_env.sh
 ```
-If you don't want to run the code on your images, then run the following script 
-```bash
-python demo.py
-```
 
 
 This installs Python dependencies and clones `facebookresearch/sam2` and
 `DepthAnything/Depth-Anything-V2` into the project root (needed because
 `Depth-Anything-V2`'s `depth_anything_v2` package is imported directly, and
 `sam2` is installed as an editable package).
+
+## Run
+
+If you don't want to run the code on your images, then run the following script 
+```bash
+python demo.py
+```
+If you want to run it on custom images, checkpoints or camera intrinstic values
+```bash
+python demo.py \
+  --image data/plate.jpeg \
+  --checkpoint models/checkpoints/dav2_nutrition5k_best.pth \
+  --camera-profile "iphone" \
+  --output-dir outputs
+```
 
 ## Required inputs
 
@@ -61,15 +72,9 @@ Edit the paths/constants at the top of `config/config.py` (or pass CLI flags
 to `demo.py`, see below) to point at your image, checkpoint, and camera
 profile.
 
-## Run
 
-```bash
-python demo.py \
-  --image data/plate.jpeg \
-  --checkpoint models/checkpoints/dav2_nutrition5k_best.pth \
-  --camera-profile "iphone" \
-  --output-dir outputs
-```
+
+
 
 All flags are optional and fall back to the defaults in `config/config.py`.
 
