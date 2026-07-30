@@ -1,10 +1,3 @@
-"""
-Manually-calibrated camera intrinsics lookup.
-
-There is intentionally no EXIF reading and no field-of-view fallback: if the
-camera used for a photo isn't registered in config.CAMERA_INTRINSICS_OVERRIDES,
-get_camera_intrinsics() raises rather than guessing focal length.
-"""
 from PIL import Image
 
 

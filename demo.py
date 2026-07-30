@@ -1,15 +1,3 @@
-#!/usr/bin/env python3
-"""
-Run the end-to-end ThaliVolumePipeline on a single food image:
-depth estimation -> food/plate segmentation -> per-item volume in cc.
-
-Usage:
-    python demo.py
-    python demo.py --image data/plate.jpeg --checkpoint models/checkpoints/dav2_nutrition5k_best.pth \
-        --camera-profile "google pixel 8" --output-dir outputs
-
-All flags are optional; defaults come from config/config.py.
-"""
 import argparse
 import sys
 

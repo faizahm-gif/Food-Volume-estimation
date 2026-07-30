@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-# Installs Python dependencies and clones the two external repos the
-# pipeline depends on (sam2, Depth-Anything-V2), mirroring what the
-# original notebook did in its "Install dependencies & clone repos" cell.
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

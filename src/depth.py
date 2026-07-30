@@ -1,8 +1,4 @@
-"""
-Depth Anything V2 (metric depth, fine-tuned) model loading + single-image
-inference. Requires Depth-Anything-V2/metric_depth on sys.path (added here),
-which scripts/setup_env.sh clones for you.
-"""
+
 import sys
 
 import cv2
@@ -23,8 +19,7 @@ def load_depth_model(
     max_depth=config.DAV2_CHECKPOINT_TRAINED_MAX_DEPTH,
     device=None,
 ):
-    """Load a fine-tuned Depth Anything V2 checkpoint (e.g. one trained on
-    Nutrition5k) for metric depth inference."""
+   
     _ensure_dav2_on_path()
     from depth_anything_v2.dpt import DepthAnythingV2  # noqa: E402 (path set above)
 

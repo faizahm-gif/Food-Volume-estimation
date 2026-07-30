@@ -1,17 +1,3 @@
-"""
-Per-item food height / area / volume math, using a pinhole camera model.
-
-Reference depth: the median depth over every pixel inside the plate/tray
-mask (no food-pixel subtraction, no plane fitting) -- a single reference
-depth is used for the whole thali.
-
-Pixel area: for a pinhole camera, a pixel at depth Z covers real-world area
-(Z/fx) * (Z/fy) = Z^2 / (fx*fy).
-
-Height: thali_reference_depth - food_depth, per pixel, masked to each food
-item. Any pixel that comes out negative is treated as edge noise / mask
-bleed and abs()'d as a last resort; the fraction affected is reported.
-"""
 import numpy as np
 
 

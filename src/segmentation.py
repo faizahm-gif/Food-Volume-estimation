@@ -1,14 +1,3 @@
-"""
-Grounding DINO + SAM2 food-plate segmentation.
-
-Carries over, unchanged in behavior, from the original notebook:
-- DetectionDeduplicator (box-IoU then mask-IoU based dedup)
-- FoodPlateSegmentation (detect -> dedup -> segment -> visualize -> compose)
-- build_indexed_mask / run_thali_segmentation (per-item indexed mask + stats)
-- detect_plate_mask (auto plate/tray detection+segmentation; NO convex-hull
-  fallback -- if Grounding DINO + SAM2 can't find a plate, this returns
-  (None, None) and the caller is expected to raise)
-"""
 from io import BytesIO
 
 import cv2

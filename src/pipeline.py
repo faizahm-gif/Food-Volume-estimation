@@ -1,8 +1,3 @@
-"""
-ThaliVolumePipeline: wires depth estimation, food/plate segmentation, and
-pinhole-camera volume math into one call that reproduces the notebook's
-end-to-end result.
-"""
 import json
 import os
 import zipfile

@@ -8,28 +8,29 @@ from a single RGB photo, using:
 - A **pinhole camera model** to convert pixel area -> real-world area, and
   depth difference -> food height, per item
 
-This is a from-scratch restructure of the original Colab notebook into an
-importable, script-runnable codebase. Running `demo.py` reproduces the
-notebook's end-to-end result on one image, with no notebook required.
+If you don't want to run the code on your images, then run the following script 
+```bash
+python demo.py
+```
 
 ## Layout
 
 ```
 thali_volume_pipeline/
 ├── config/
-│   └── config.py          # all paths, thresholds, camera profiles in one place
+│   └── config.py         
 ├── src/
-│   ├── segmentation.py     # DetectionDeduplicator, FoodPlateSegmentation, plate detection
-│   ├── depth.py            # Depth Anything V2 model loading + inference
-│   ├── camera.py           # manual camera intrinsics lookup (no EXIF/auto-detect)
-│   ├── volume.py           # reference depth, per-item height/area/volume math
-│   └── pipeline.py         # ThaliVolumePipeline: wires the above into one call
+│   ├── segmentation.py     
+│   ├── depth.py           
+│   ├── camera.py          
+│   ├── volume.py         
+│   └── pipeline.py        
 ├── scripts/
-│   └── setup_env.sh        # installs deps, clones sam2 + Depth-Anything-V2
-├── models/checkpoints/      # put your dav2_nutrition5k_best.pth here
-├── data/                    # put your input food image(s) here
-├── outputs/                 # results are written here (depth map, masks, volumes.json)
-├── demo.py                  # <-- run this
+│   └── setup_env.sh   
+├── models/checkpoints/    
+├── data/                  
+├── outputs/                 
+├── demo.py
 └── requirements.txt
 ```
 
@@ -45,10 +46,10 @@ This installs Python dependencies and clones `facebookresearch/sam2` and
 `Depth-Anything-V2`'s `depth_anything_v2` package is imported directly, and
 `sam2` is installed as an editable package).
 
-## Required inputs (not included in this codebase)
+## Required inputs
 
 1. **A food image** — place it under `data/`, e.g. `data/plate.jpeg`.
-2. **A fine-tuned Depth Anything V2 checkpoint** (`dav2_nutrition5k_best.pth`)
+2. **Add model weights (you can download it from here) [Model weights](https://drive.google.com/file/d/1GBDcIkjbvt089516xQsQK_SYa0i4PMDL/view?usp=sharing)** 
    — place it under `models/checkpoints/`.
 3. **A camera profile** for whatever device took the photo — add its
    `fx_px`, `fy_px`, and the reference resolution it was calibrated at to
@@ -72,7 +73,7 @@ python demo.py \
 
 All flags are optional and fall back to the defaults in `config/config.py`.
 
-### What it prints
+### Output
 
 - Detected food items and confidences
 - Auto-detected plate/tray mask confidence
@@ -87,18 +88,4 @@ All flags are optional and fall back to the defaults in `config/config.py`.
 - `masks/plate_mask.png`, `masks/<item_key>.png` — binary PNG masks
 - `plate_mask.npy` — raw plate mask array
 - `food_item_volumes_cc.json` — per-item + total volume in cc
-
-No histograms or side-by-side comparison figures are generated — only the
-depth map and segmentation masks, per current preference.
-
-## Notes carried over from the notebook
-
-- **No convex-hull plate fallback.** The plate/tray mask must come from
-  Grounding DINO + SAM2; if no plate is detected, the pipeline raises with a
-  suggestion to lower `min_confidence` or use a clearer photo.
-- **No EXIF or auto camera-calibration.** Focal length is always looked up
-  from the manual `CAMERA_INTRINSICS_OVERRIDES` table in `config/config.py`.
-- **Single reference depth per thali.** The reference depth is the median
-  depth over the whole plate mask (no per-item local ring search, no global
-  plane fit). Height is `thali_reference_depth - food_depth`, `abs()`'d only
-  as a last-resort cleanup of edge noise, with a diagnostic printed per item.
+  
