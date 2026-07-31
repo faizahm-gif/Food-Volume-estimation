@@ -56,7 +56,22 @@ python demo.py \
   --camera-profile "iphone" \
   --output-dir outputs
 ```
+<<<<<<< HEAD
 
+=======
+To run it using plate heuristics then execute the following script
+```
+python demo.py \
+  --image data/plate.jpeg \
+  --checkpoint models/checkpoints/dav2_nutrition5k_best.pth \
+  --area-method plate_heuristic \
+  --plate-shape rectangular \
+  --plate-length-m 0.355 \
+  --plate-width-m 0.255 \
+  --output-dir outputs
+```
+You can change the plate-shape to 'circular' or 'rectangular' while providing 'diameter' or 'length' and 'width'
+>>>>>>> f4ca9de (updated for plate parameters)
 ## Required inputs
 
 1. **A food image** — place it under `data/`, e.g. `data/plate.jpeg`.

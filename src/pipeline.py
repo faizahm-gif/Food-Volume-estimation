@@ -1,3 +1,4 @@
+
 import json
 import os
 import zipfile
@@ -7,7 +8,7 @@ import numpy as np
 from PIL import Image
 
 from config import config
-from src import camera, depth, volume
+from src import camera, depth, plate_heuristics, volume
 from src.segmentation import (
     FoodPlateSegmentation,
     detect_plate_mask,
@@ -26,6 +27,11 @@ class ThaliVolumePipeline:
         food_custom_prompt=config.FOOD_CUSTOM_PROMPT,
         plate_min_confidence=config.PLATE_MIN_CONFIDENCE,
         max_detections=config.MAX_DETECTIONS,
+        area_estimation_method=config.AREA_ESTIMATION_METHOD,
+        plate_diameter_m=config.PLATE_DIAMETER_M,
+        plate_shape=config.PLATE_SHAPE,
+        plate_length_m=config.PLATE_LENGTH_M,
+        plate_width_m=config.PLATE_WIDTH_M,
     ):
         self.checkpoint_path = checkpoint_path
         self.camera_profile_name = camera_profile_name
@@ -36,6 +42,23 @@ class ThaliVolumePipeline:
         self.food_custom_prompt = food_custom_prompt
         self.plate_min_confidence = plate_min_confidence
         self.max_detections = max_detections
+        self.area_estimation_method = area_estimation_method
+        self.plate_diameter_m = plate_diameter_m
+        self.plate_shape = plate_shape
+        self.plate_length_m = plate_length_m
+        self.plate_width_m = plate_width_m
+
+        if self.area_estimation_method not in ("plate_heuristic", "camera_intrinsics"):
+            raise ValueError(
+                f"Unknown area_estimation_method: {self.area_estimation_method!r}. "
+                "Must be 'plate_heuristic' or 'camera_intrinsics'."
+            )
+
+        if self.plate_shape not in ("circular", "rectangular"):
+            raise ValueError(
+                f"Unknown plate_shape: {self.plate_shape!r}. "
+                "Must be 'circular' or 'rectangular'."
+            )
 
         self._depth_model = None
         self._device = None
@@ -121,13 +144,48 @@ class ThaliVolumePipeline:
             f"plate-mask pixels): {thali_reference_depth:.4f} m"
         )
 
-        # 5. Camera intrinsics -> pixel area map
-        fx, fy = camera.get_camera_intrinsics(
-            image_path, self.camera_profile_name, self.camera_intrinsics_overrides
-        )
-        print(f"Using manual camera profile: {self.camera_profile_name}")
-        print(f"Focal length: Fx={fx:.2f} px, Fy={fy:.2f} px")
-        pixel_area_map = volume.compute_pixel_area_map(depth_map, fx, fy)
+        # 5. Pixel -> real-world area map
+        if self.area_estimation_method == "plate_heuristic":
+            if self.plate_shape == "circular":
+                meters_per_pixel, plate_diameter_px = plate_heuristics.compute_scale_from_plate(
+                    plate_mask, self.plate_diameter_m
+                )
+                print(
+                    f"Using circular plate-diameter heuristic: known plate diameter="
+                    f"{self.plate_diameter_m * 100:.1f} cm, measured plate diameter="
+                    f"{plate_diameter_px:.1f} px, scale={meters_per_pixel * 100:.5f} cm/px"
+                )
+                pixel_area_map = volume.compute_pixel_area_map_from_plate_scale(
+                    depth_map, meters_per_pixel
+                )
+            else:  # "rectangular"
+                (
+                    meters_per_pixel_x,
+                    meters_per_pixel_y,
+                    bbox_width_px,
+                    bbox_height_px,
+                ) = plate_heuristics.compute_scale_from_plate_rectangular(
+                    plate_mask, self.plate_length_m, self.plate_width_m
+                )
+                print(
+                    f"Using rectangular plate heuristic: known plate length="
+                    f"{self.plate_length_m * 100:.1f} cm, known plate width="
+                    f"{self.plate_width_m * 100:.1f} cm, measured bbox="
+                    f"{bbox_width_px:.1f}x{bbox_height_px:.1f} px, "
+                    f"scale_x={meters_per_pixel_x * 100:.5f} cm/px, "
+                    f"scale_y={meters_per_pixel_y * 100:.5f} cm/px"
+                )
+                pixel_area_map = volume.compute_pixel_area_map_from_plate_scale_rectangular(
+                    depth_map, meters_per_pixel_x, meters_per_pixel_y
+                )
+        else:  # "camera_intrinsics"
+            fx, fy = camera.get_camera_intrinsics(
+                image_path, self.camera_profile_name, self.camera_intrinsics_overrides
+            )
+            print(f"Using manual camera profile: {self.camera_profile_name}")
+            print(f"Focal length: Fx={fx:.2f} px, Fy={fy:.2f} px")
+            pixel_area_map = volume.compute_pixel_area_map(depth_map, fx, fy)
+
         print(
             "Pixel area map range: "
             f"{pixel_area_map.min():.3e} - {pixel_area_map.max():.3e} m^2/px"

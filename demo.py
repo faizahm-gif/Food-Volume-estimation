@@ -1,3 +1,4 @@
+
 import argparse
 import sys
 
@@ -16,7 +17,45 @@ def parse_args():
     parser.add_argument(
         "--camera-profile",
         default=config.DEFAULT_CAMERA_PROFILE_NAME,
-        help="Key into CAMERA_INTRINSICS_OVERRIDES in config/config.py.",
+        help="Key into CAMERA_INTRINSICS_OVERRIDES in config/config.py. "
+        "Only used when --area-method=camera_intrinsics.",
+    )
+    parser.add_argument(
+        "--area-method",
+        choices=["plate_heuristic", "camera_intrinsics"],
+        default=config.AREA_ESTIMATION_METHOD,
+        help="How to convert pixels to real-world area: 'plate_heuristic' "
+        "(default) uses the plate's known diameter; 'camera_intrinsics' "
+        "uses fx/fy and per-pixel depth.",
+    )
+    parser.add_argument(
+        "--plate-diameter-m",
+        type=float,
+        default=config.PLATE_DIAMETER_M,
+        help="Known real-world plate diameter in meters, used when "
+        "--area-method=plate_heuristic and --plate-shape=circular.",
+    )
+    parser.add_argument(
+        "--plate-shape",
+        choices=["circular", "rectangular"],
+        default=config.PLATE_SHAPE,
+        help="Shape of the plate/tray, used when --area-method=plate_heuristic. "
+        "'circular' (default) uses --plate-diameter-m. 'rectangular' uses "
+        "--plate-length-m and --plate-width-m instead.",
+    )
+    parser.add_argument(
+        "--plate-length-m",
+        type=float,
+        default=config.PLATE_LENGTH_M,
+        help="Known real-world plate/tray length in meters, used when "
+        "--area-method=plate_heuristic and --plate-shape=rectangular.",
+    )
+    parser.add_argument(
+        "--plate-width-m",
+        type=float,
+        default=config.PLATE_WIDTH_M,
+        help="Known real-world plate/tray width in meters, used when "
+        "--area-method=plate_heuristic and --plate-shape=rectangular.",
     )
     parser.add_argument(
         "--food-confidence",
@@ -46,6 +85,11 @@ def main():
         camera_profile_name=args.camera_profile,
         food_confidence_threshold=args.food_confidence,
         plate_min_confidence=args.plate_confidence,
+        area_estimation_method=args.area_method,
+        plate_diameter_m=args.plate_diameter_m,
+        plate_shape=args.plate_shape,
+        plate_length_m=args.plate_length_m,
+        plate_width_m=args.plate_width_m,
     )
 
     try:

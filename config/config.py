@@ -17,7 +17,7 @@ DAV2_METRIC_DEPTH_DIR = os.path.join(DAV2_REPO_DIR, "metric_depth")
 
 # Default input image / checkpoint. Override with --image / --checkpoint on
 # the demo.py CLI, or just change these two lines.
-DEFAULT_IMAGE_PATH = os.path.join(DATA_DIR, "sample.jpg")
+DEFAULT_IMAGE_PATH = os.path.join(DATA_DIR, "sample.jpeg")
 DEFAULT_CHECKPOINT_PATH = os.path.join(CHECKPOINTS_DIR, "dav2_finetuned.pth")
 
 # ---------------------------------------------------------------------------
@@ -46,5 +46,37 @@ CAMERA_INTRINSICS_OVERRIDES = {
     },
 }
 DEFAULT_CAMERA_PROFILE_NAME = "iphone"
+
+# ---------------------------------------------------------------------------
+# Pixel -> real-world area estimation method
+# ---------------------------------------------------------------------------
+# "plate_heuristic": scale is derived from a known real-world plate diameter
+#     vs. the plate's measured pixel diameter (from its SAM2 mask). This is
+#     now the default.
+# "camera_intrinsics": scale is derived from fx/fy and per-pixel depth via
+#     the pinhole camera model (the previous default). Kept available for
+#     comparison/fallback.
+AREA_ESTIMATION_METHOD = "plate_heuristic"
+
+# Real-world diameter of the plate/thali used in your photos, in meters.
+# Standard steel thali plates are typically ~0.26-0.30 m; measure your own
+# plate and set this accordingly.
+PLATE_DIAMETER_M = 0.26
+
+# ---------------------------------------------------------------------------
+# Plate shape (used only when AREA_ESTIMATION_METHOD == "plate_heuristic")
+# ---------------------------------------------------------------------------
+# "circular": scale derived from PLATE_DIAMETER_M, averaged isotropically
+#     over the mask bbox's width and height.
+# "rectangular": scale derived from PLATE_LENGTH_M and PLATE_WIDTH_M,
+#     applied anisotropically to the mask bbox's width and height
+#     (longer physical side paired with the longer bbox side).
+PLATE_SHAPE = "circular"
+
+# Real-world length/width of a rectangular plate/tray, in meters. Only used
+# when PLATE_SHAPE == "rectangular". Order doesn't matter -- the longer of
+# the two is automatically paired with the longer bbox pixel dimension.
+PLATE_LENGTH_M = 0.355
+PLATE_WIDTH_M = 0.255
 
 M3_TO_CC = 1_000_000.0

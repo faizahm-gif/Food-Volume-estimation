@@ -162,7 +162,7 @@ class FoodPlateSegmentation:
             "salad", "raita", "curd", "yogurt",
             "pickle", "achaar", "chutney", "papad", "papadum", "sauce",
             "payasam", "kheer", "sweet", "dessert", "halwa",
-            "food", "thali item", "egg"
+            "food", "thali item", "egg", "milk" , "white" , "white milk" , "cow milk", "white water" 
         ]
 
         print("Models loaded successfully!")
