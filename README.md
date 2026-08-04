@@ -56,9 +56,6 @@ python demo.py \
   --camera-profile "iphone" \
   --output-dir outputs
 ```
-<<<<<<< HEAD
-
-=======
 To run it using plate heuristics then execute the following script
 ```
 python demo.py \
@@ -71,7 +68,6 @@ python demo.py \
   --output-dir outputs
 ```
 You can change the plate-shape to 'circular' or 'rectangular' while providing 'diameter' or 'length' and 'width'
->>>>>>> f4ca9de (updated for plate parameters)
 ## Required inputs
 
 1. **A food image** — place it under `data/`, e.g. `data/plate.jpeg`.
@@ -86,9 +82,6 @@ You can change the plate-shape to 'circular' or 'rectangular' while providing 'd
 Edit the paths/constants at the top of `config/config.py` (or pass CLI flags
 to `demo.py`, see below) to point at your image, checkpoint, and camera
 profile.
-
-
-
 
 
 All flags are optional and fall back to the defaults in `config/config.py`.
